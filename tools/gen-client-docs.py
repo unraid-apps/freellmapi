@@ -109,7 +109,7 @@ providers:
 ```
 
 Add `FREELLMAPI_API_KEY=<unified key>` to `$HERMES_HOME/.env` (mode 0600). Hermes loads that file itself.''',
-    extra="Hermes ignores OPENAI_BASE_URL for anything except api.openai.com, so the endpoint must be declared in config.yaml. The profile route leaves the default model alone; to make FreeLLMAPI the default instead, drop `--profile local` (the CLI then replaces the top-level `model` block with provider: custom).",
+    extra="Hermes ignores OPENAI_BASE_URL for anything except api.openai.com, so the endpoint must be declared in config.yaml, exactly like a local Ollama endpoint would be. Per the upstream CLI notes, the `hermes setup` wizard writes the same kind of block for a custom endpoint. The profile route leaves the default model alone; to make FreeLLMAPI the default instead, drop `--profile local` (the CLI then replaces the top-level `model` block with provider: custom).",
 )
 
 A["openclaw"] = dict(
@@ -478,71 +478,71 @@ Parameters (edit before sending):
 - API KEY: expected in the environment variable FREELLMAPI_API_KEY. If it is not set, ask me for the unified key (it starts with "freellmapi-").
 
 Rules:
+- FreeLLMAPI is an ordinary OpenAI-compatible endpoint, configured like any other provider such as Ollama. Nothing has to be installed for it on this machine. Do not install packages and do not change PATH.
 - Never print the API key, never put it in a command line argument, never write it anywhere except where this task says the configuration stores it. Do not echo it in your replies or in logs.
 - Only touch files that belong to @@NAME@@. Do not change anything else on this machine.
-- The CLI makes a timestamped backup before it changes an existing file. If anything looks wrong, stop and show me the exact error without the key.
+- Before you change an existing config file, make a timestamped backup copy and keep its permissions.
+- If anything looks wrong, stop and show me the exact error without the key.
 - Run all commands in one shell session so exported variables carry over.
 
 Steps:
-0. Prerequisites. Run `node --version` and `npx --version`. The FreeLLMAPI CLI needs Node.js >= 20.18 and < 25, plus network access to the npm registry. If Node is missing or the wrong version, STOP and tell me what is missing. Do not install system packages or change PATH without asking me. @@FALLBACKHINT@@
 1. Reachability. Run `export GATEWAY=<the GATEWAY value above>`, then `curl -sS $GATEWAY/api/ping`. If the host name does not resolve or the connection fails, stop and tell me. This machine is then probably not on the same Docker network as FreeLLMAPI. Do not guess another address.
 2. Catalog. Run `curl -sS -H "Authorization: Bearer $FREELLMAPI_API_KEY" $GATEWAY/v1/models` and confirm that a model with id "auto" is listed. A 401 means the key is wrong.
-3. Dry run. Export `FREELLMAPI_URL=$GATEWAY`, then run:
-   `npx --yes freellmapi @@CMD@@ @@PROFILEARG@@--model auto --dry-run`
-   Show me the diff.
-4. Compare the diff with what I expect: @@EXPECT@@
-   Apply only if it matches. If it touches anything else, stop and ask me.
-5. Apply. Run the same command without --dry-run.
-6. Verify. @@VERIFY@@
-7. Test. @@TEST@@
-8. Follow-up. @@AFTER@@
+3. Configure. @@CONFIGURE@@
+4. Verify. @@VERIFY@@
+5. Test. @@TEST@@
+6. Follow-up. @@AFTER@@
 
 Final report: list the files you changed, what the test returned, and exactly what I type or run to use FreeLLMAPI with model "auto". @@SELECTLINE@@
 """
 
-FALLBACK_HINT_WITH = (
-    "If the CLI cannot be used, switch to the section \"Manual configuration\" at the end of this prompt and "
-    "configure the agent by hand with the same values."
-)
-FALLBACK_HINT_WITHOUT = (
-    "If the CLI cannot be used, configure the agent through its own provider settings instead: "
-    "OpenAI-compatible provider, base URL $GATEWAY@@V1@@, model auto, API key from FREELLMAPI_API_KEY. "
-    "See the agent documentation: @@DOCS@@"
+CLI_FLOW = (
+    "Optional shortcut: if Node.js >= 20.18 and < 25 with npx is ALREADY installed on this machine, the official FreeLLMAPI CLI writes the same entries. "
+    "Export `FREELLMAPI_URL=$GATEWAY`, run `npx --yes freellmapi @@CMD@@ @@PROFILEARG@@--model auto --dry-run`, show me the diff, apply only if it matches the expected result above, then run it again without --dry-run. "
+    "Do not install Node.js for this; the direct way works without it."
 )
 
 
 def render(aid: str, a: dict) -> str:
-    base = BASE
-    profile = "local" if a["profile"] else "(not used: this agent has no profile support, the CLI makes FreeLLMAPI its default)"
+    profile = "local" if a["profile"] else "(not used: this agent has no profile concept)"
     profilearg = "--profile local " if a["profile"] else ""
     if a["profile"]:
         goal = (
-            f"Set up FreeLLMAPI as an additional model provider for {a['name']} on this machine, without changing my default model. "
+            f"Add FreeLLMAPI as an additional model provider for {a['name']} on this machine, without changing my default model. "
             f"Afterwards I want to use the model \"auto\" through FreeLLMAPI."
         )
     else:
         goal = (
-            f"Set up FreeLLMAPI as the model provider for {a['name']} on this machine, using the model \"auto\". "
-            f"The setup command makes FreeLLMAPI the default for this agent and merges into the existing configuration, keeping other providers."
+            f"Add FreeLLMAPI as a model provider for {a['name']} on this machine, using the model \"auto\". "
+            f"Keep my other providers and settings."
         )
-    hint = FALLBACK_HINT_WITH if a.get("fallback") else FALLBACK_HINT_WITHOUT.replace("@@V1@@", "" if a["root"] else "/v1").replace("@@DOCS@@", a["docs"])
+    v1 = "" if a["root"] else "/v1"
+    if a.get("fallback"):
+        configure = (
+            "Add the provider entry directly. Add exactly this and change nothing else "
+            "(the examples use http://freellmapi:3001; use your GATEWAY value if you changed it):\n\n"
+            + a["fallback"].replace("<unified key>", "<value of FREELLMAPI_API_KEY>")
+            + "\n\n   Expected result: " + a["expect"] + "\n\n   " + CLI_FLOW
+        )
+    else:
+        configure = (
+            f"Add FreeLLMAPI in the agent's own provider settings as an OpenAI-compatible provider: base URL $GATEWAY{v1}, "
+            f"API key from FREELLMAPI_API_KEY, model auto. Agent documentation: {a['docs']}\n"
+            f"   Expected result: {a['expect']}\n"
+            f"   If editing the settings by hand is impractical, use the optional shortcut. {CLI_FLOW}"
+        )
+    configure = configure.replace("@@CMD@@", a["cmd"]).replace("@@PROFILEARG@@", profilearg)
     select_line = f"Expected selector: {a['select']}." if a.get("select") else ""
-    text = (PROMPT
+    return (PROMPT
             .replace("@@GOAL@@", goal)
-            .replace("@@BASE@@", base)
+            .replace("@@BASE@@", BASE)
             .replace("@@PROFILE@@", profile)
             .replace("@@NAME@@", a["name"])
-            .replace("@@FALLBACKHINT@@", hint)
-            .replace("@@CMD@@", a["cmd"])
-            .replace("@@PROFILEARG@@", profilearg)
-            .replace("@@EXPECT@@", a["expect"])
+            .replace("@@CONFIGURE@@", configure)
             .replace("@@VERIFY@@", a["verify"])
             .replace("@@TEST@@", a["test"])
             .replace("@@AFTER@@", a["after"])
             .replace("@@SELECTLINE@@", select_line))
-    if a.get("fallback"):
-        text += "\nManual configuration (only if the CLI cannot be used; write the key only where indicated and keep file modes at 0600). The examples use http://freellmapi:3001; replace it with your GATEWAY value if you changed it:\n\n" + a["fallback"].replace("<unified key>", "<value of FREELLMAPI_API_KEY>") + "\n"
-    return text
 
 
 def page(aid: str, a: dict) -> str:
@@ -555,7 +555,7 @@ def page(aid: str, a: dict) -> str:
 
 |  |  |
 | --- | --- |
-| Setup command | `npx --yes freellmapi {a['cmd']}` |
+| Optional CLI shortcut | `npx --yes freellmapi {a['cmd']}` (writes the same entries; not required) |
 | Wire | {a['wire']} |
 | Base URL form | {ver} |
 | Profile support | {"yes (`--profile local` leaves the default model alone)" if a['profile'] else "no (the command makes FreeLLMAPI the default and merges into the existing config)"} |
@@ -565,12 +565,12 @@ def page(aid: str, a: dict) -> str:
 
 ## Prompt
 
-Copy this into {a['name']} (or any coding agent) on the machine where {a['name']} runs. Edit the three parameters at the top first. The default gateway address assumes the agent runs in a container on the same custom Docker network as FreeLLMAPI; see [choosing the gateway address](../README.md#choosing-the-gateway-address) for the other cases.
+Copy this into {a['name']} (or any coding agent) on the machine where {a['name']} runs. FreeLLMAPI is configured like any other OpenAI-compatible endpoint, so **nothing has to be installed for it** on that machine. Edit the three parameters at the top first. The default gateway address assumes the agent runs in a container on the same custom Docker network as FreeLLMAPI; see [choosing the gateway address](../README.md#choosing-the-gateway-address) for the other cases.
 
 ````text
 {prompt}````
 
-Prompts are derived from the FreeLLMAPI CLI 0.8.2 source and the upstream documentation. They have not been run against every agent; the dry run in step 3 is the safety net.
+Prompts are derived from the FreeLLMAPI CLI 0.8.2 source and the upstream documentation. They have not been run against every agent; the expected-result check in step 3 and the test in step 5 are the safety net.
 """
     return out.replace("\n\n\n", "\n\n")
 
@@ -689,22 +689,20 @@ rows.append("| [Cursor](prompts/cursor.md) | not possible on a private network |
 with open(os.path.join(OUT, "README.md"), "w", encoding="utf-8") as fh:
     fh.write(f"""# Connecting agents and apps to FreeLLMAPI
 
-Ready-to-paste prompts that let a coding agent configure itself for your FreeLLMAPI container. Each prompt installs nothing system-wide, runs the official FreeLLMAPI CLI in dry-run mode first, compares the diff with what is documented, and only then writes. They were written for the Unraid setup in this repository but work for any FreeLLMAPI gateway.
+Ready-to-paste prompts that let a coding agent configure itself for your FreeLLMAPI container. Each prompt checks that the gateway is reachable, adds the provider entry, verifies it and runs a test request. They were written for the Unraid setup in this repository but work for any FreeLLMAPI gateway.
 
 ## How it works
 
-FreeLLMAPI publishes a small command line tool, the npm package `freellmapi`, that knows the configuration format of about twenty agents. It reads your live model catalog from the gateway, backs up the agent's existing config with a timestamp, and merges its entries into it. The prompts here wrap that tool with checks and safety rules so you can hand the whole job to the agent you want to configure.
+FreeLLMAPI is an ordinary OpenAI-compatible endpoint. An agent needs three things, the same as for a local Ollama: a base URL, an API key and a model name. **Nothing has to be installed for FreeLLMAPI on the agent's machine.** All routing, failover and key handling happens in the FreeLLMAPI container.
 
-The tool is fetched by `npx` on demand. It is not installed on the Unraid server and not inside the FreeLLMAPI container. It must be runnable **on the machine where the agent runs**, which is why every prompt starts with a prerequisite check.
+The prompts here tell a coding agent to add that provider entry to its own configuration, check that the gateway answers, and run a test request. For agents with a simple config format the prompt contains the exact entry. For the others it points at the agent's own provider settings.
 
-Requirements on the agent's machine:
+FreeLLMAPI also publishes a small command line tool, the npm package `freellmapi`, that writes the same entries for about twenty agents. It is an optional shortcut: it reads your live model catalog, makes a timestamped backup of the existing config and merges its entries in. Every prompt mentions it as an alternative, usable only if Node.js 20.18 to 24 with `npx` is already present. It is never required and the prompts forbid installing Node.js for it.
 
-- Node.js 20.18 or newer, but older than 25 (the package declares `>=20.18.0 <25.0.0`), with `npx`.
-- Outbound access to the npm registry.
+What the agent's machine does need:
+
 - A route to the gateway, see below.
 - The unified API key from the FreeLLMAPI dashboard (Keys page), preferably exported as `FREELLMAPI_API_KEY`.
-
-Prompts for agents running in a container need Node.js in that container. If it is missing, the agent stops and tells you instead of installing anything. Where the config format is simple, the prompt carries a manual configuration block for that case.
 
 ## Choosing the gateway address
 
@@ -733,11 +731,11 @@ Do not expose the gateway to the public internet. It is a single-user applicatio
 - Profile name `local`: change it freely. The provider name is `freellmapi-` plus the profile name, so `local` becomes `freellmapi-local`.
 - The API key is never passed as a command line argument. The CLI reads `FREELLMAPI_URL` and `FREELLMAPI_API_KEY` from the environment.
 - Several agents store the key in their own config file by design (the CLI creates those files with mode 0600). The prompt says so per agent and tells the agent not to print or copy such files.
-- The dry run comes first, always. If the diff touches more than the documented files, the agent stops.
+- The prompt states the expected result per agent. If a change would touch more than that, the agent stops.
 
 ## Sources and limits
 
-Derived from the upstream [agent clients guide]({UPDOCS}) and the CLI source (version 0.8.2). The prompts have not been executed against every agent. If an agent changes its configuration format, the CLI is the authority: run `npx --yes freellmapi list` for the supported agents and `npx --yes freellmapi doctor <agent>` to check that requests actually reach the gateway.
+Derived from the upstream [agent clients guide]({UPDOCS}) and the CLI source (version 0.8.2). The prompts have not been executed against every agent. If an agent changes its configuration format, the optional CLI is the authority: run `npx --yes freellmapi list` for the supported agents and `npx --yes freellmapi doctor <agent>` to check that requests actually reach the gateway.
 
 Maintenance: the pages are generated by `tools/gen-client-docs.py docs/clients`. Edit the script, not the pages.
 """)
