@@ -15,3 +15,13 @@ Maintained automatically by the sync workflow; the newest entry also carries the
 | `v0.16.12` | 2026-11-04T15:17:38+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.12) | `db24d300f031` | `sha256:9331cb369a4f…` |
 | `v0.16.11` | 2026-11-04T15:16:38+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.11) | `db24d300f031` | `sha256:d858c76225e4…` |
 | `v0.16.10` | 2026-11-04T15:16:17+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.10) | `db24d300f031` | `sha256:3f6ba9bfe956…` |
+| `v0.16.9` | 2026-11-04T23:44:46+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.9) | `db24d300f031` | `sha256:b4723c688f1d…` |
+| `v0.16.8` | 2026-11-04T23:43:57+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.8) | `db24d300f031` | `sha256:a9f039e662a9…` |
+| `v0.16.7` | 2026-11-04T23:42:58+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.7) | `db24d300f031` | `sha256:6d19ce97ed1e…` |
+| `v0.16.6` | 2026-11-04T23:42:31+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.6) | `db24d300f031` | `sha256:9b11990847dc…` |
+| `v0.16.5` | 2026-11-04T23:41:34+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.5) | `db24d300f031` | `sha256:b602fa2e581e…` |
+| `v0.16.4` | 2026-11-04T23:41:13+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.4) | `db24d300f031` | `sha256:a33f43bc3738…` |
+| `v0.16.3` | 2026-11-04T23:40:50+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.3) | `db24d300f031` | `sha256:173d982a4da2…` |
+| `v0.16.2` | 2026-11-04T23:40:27+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.2) | `db24d300f031` | `sha256:8ced615ff842…` |
+| `v0.16.1` | 2026-11-04T23:40:05+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.1) | `db24d300f031` | `sha256:d2aa2675fb4d…` |
+| `v0.16.0` | 2026-11-04T23:39:43+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.0) | `db24d300f031` | `sha256:daa6d39c654b…` |
