@@ -12,7 +12,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate XML templates and ca_profile.xml
         run: python3 scripts/validate-template.py --check-urls ca_profile.xml templates/*.xml
       - name: Shell syntax
