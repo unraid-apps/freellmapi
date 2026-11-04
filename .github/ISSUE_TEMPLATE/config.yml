@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: FreeLLMAPI application bug or feature request
+    url: https://github.com/tashfeenahmed/freellmapi/issues
+    about: Routing, providers, dashboard, API behaviour - anything inside the app belongs to the upstream project.
+  - name: FreeLLMAPI documentation
+    url: https://github.com/tashfeenahmed/freellmapi/tree/main/docs/en
+    about: Install, API reference, client setup guides.

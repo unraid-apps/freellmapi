@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CommunityApplications>
+  <Profile>
+    Unraid Community Applications templates and one-click wrapper images for self-hosted tools, maintained by Hardskiller. Wrapper images stay as close to the upstream project as possible: the official image plus the minimum needed to make it install cleanly on Unraid (for example generating a required secret on first start). Builds follow upstream stable releases automatically. Template and image support via GitHub Issues; application questions belong to the upstream project linked in each template.
+  </Profile>
+  <Icon>https://github.com/Hardskiller.png</Icon>
+  <WebPage>https://github.com/Hardskiller</WebPage>
+</CommunityApplications>

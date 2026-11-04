@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<Container version="2">
+  <Name>FreeLLMAPI</Name>
+  <Repository>ghcr.io/unraid-apps/freellmapi:latest</Repository>
+  <Registry>https://github.com/unraid-apps/freellmapi/pkgs/container/freellmapi</Registry>
+  <Network>bridge</Network>
+  <MyIP/>
+  <Shell>sh</Shell>
+  <Privileged>false</Privileged>
+  <Support>https://github.com/unraid-apps/freellmapi/issues</Support>
+  <Project>https://github.com/tashfeenahmed/freellmapi</Project>
+  <Overview>FreeLLMAPI aggregates the free tiers of 30+ LLM providers (Google, Groq, Cerebras, Mistral, OpenRouter, Cloudflare, NVIDIA, HuggingFace and more) behind one OpenAI-compatible /v1 endpoint, plus Anthropic Messages, Gemini and Ollama compatible APIs. A router picks the best available model, fails over on rate limits, rotates keys and tracks per-key usage so you stay inside every free-tier cap. Works with Claude Code, Codex CLI, Cursor, Cline, OpenCode, Aider, Open WebUI and any OpenAI-compatible client.&#xD;
+&#xD;
+This image is the official upstream image plus a small entrypoint that generates the required ENCRYPTION_KEY on first start, so no terminal step is needed. The key is stored in your appdata folder as .encryption-key - back it up together with the database. Builds track upstream stable releases automatically; update through Unraid's Docker tab as usual.&#xD;
+&#xD;
+FIRST START: open the WebUI. Because you reach it from another device, FreeLLMAPI asks for a one-time setup code printed in the container log (Docker tab, container icon, Logs). Then create the admin account, add provider keys on the Keys page and copy the unified freellmapi-... key for your clients. API base URL: http://[IP]:[PORT:3001]/v1&#xD;
+&#xD;
+SECURITY: single-user application guarded only by its API key. Keep it on your LAN or behind Tailscale (fields are pre-filled, just enable "Use Tailscale"). Do not port-forward it to the internet.&#xD;
+&#xD;
+Further tuning variables are documented in the upstream .env.example and can be added with "Add another Path, Port, Variable".</Overview>
+  <Category>AI: Tools:Utilities Network:Web</Category>
+  <WebUI>http://[IP]:[PORT:3001]/</WebUI>
+  <TemplateURL>https://raw.githubusercontent.com/unraid-apps/freellmapi/main/templates/freellmapi.xml</TemplateURL>
+  <Icon>https://raw.githubusercontent.com/unraid-apps/freellmapi/main/freellmapi-icon.png</Icon>
+  <ExtraParams>--add-host=host.docker.internal:host-gateway --hostname=freellmapi</ExtraParams>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled/>
+  <DonateText/>
+  <DonateLink/>
+  <Requires/>
+  <TailscaleEnabled>false</TailscaleEnabled>
+  <TailscaleHostname>freellmapi</TailscaleHostname>
+  <TailscaleIsExitNode>false</TailscaleIsExitNode>
+  <TailscaleSSH>false</TailscaleSSH>
+  <TailscaleUserspaceNetworking>true</TailscaleUserspaceNetworking>
+  <TailscaleLANAccess>false</TailscaleLANAccess>
+  <TailscaleServe>serve</TailscaleServe>
+  <TailscaleServePort>3001</TailscaleServePort>
+  <TailscaleWebUI>https://[hostname][magicdns]/</TailscaleWebUI>
+  <Config Name="WebUI / API port" Target="3001" Default="3001" Mode="tcp" Description="Host port for the dashboard and the /v1 API. The container itself always listens on 3001." Type="Port" Display="always" Required="true" Mask="false">3001</Config>
+  <Config Name="Data (SQLite database + encryption key)" Target="/app/server/data" Default="/mnt/user/appdata/freellmapi" Mode="rw" Description="Persistent data: SQLite database with the encrypted provider keys, settings and analytics, plus the auto-generated .encryption-key file. The container sets the owner to UID/GID 1000 on start." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/freellmapi</Config>
+  <Config Name="ENCRYPTION_KEY" Target="ENCRYPTION_KEY" Default="" Mode="" Description="Optional. Leave EMPTY to auto-generate a key on first start (stored in the data folder as .encryption-key). Or set your own 64-character hex key (openssl rand -hex 32). Never change it later: stored provider keys become unreadable with a different key." Type="Variable" Display="always" Required="false" Mask="true"></Config>
+  <Config Name="TZ" Target="TZ" Default="Europe/Berlin" Mode="" Description="Time zone for logs and analytics." Type="Variable" Display="always" Required="false" Mask="false">Europe/Berlin</Config>
+  <Config Name="FREELLMAPI_UPDATE_CHECK" Target="FREELLMAPI_UPDATE_CHECK" Default="off" Mode="" Description="Keep 'off'. The dashboard's own update checker compares against upstream and offers an 'Update now' button that does not work on Unraid. Update through the Docker tab instead." Type="Variable" Display="advanced" Required="false" Mask="false">off</Config>
+  <Config Name="PROXY_URL" Target="PROXY_URL" Default="" Mode="" Description="Optional outbound proxy for provider requests, e.g. socks5h://host.docker.internal:7890 or http://proxy:8080. Empty = direct connection. Can also be set in the dashboard under Keys." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="STREAM_KEEPALIVE_MS" Target="STREAM_KEEPALIVE_MS" Default="" Mode="" Description="Optional. Set to 15000 if clients with an idle watchdog (e.g. Claude Code) abort long reasoning streams before the first token arrives. Sends a content-free SSE ping at this interval. Off when empty." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="TRUST_PROXY" Target="TRUST_PROXY" Default="" Mode="" Description="Optional. Set to 1 when a reverse proxy (Nginx Proxy Manager, SWAG, Traefik) or Tailscale Serve sits in front, so analytics and rate limiting see the real client IP. Empty = do not trust forwarded headers." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="DASHBOARD_ORIGINS" Target="DASHBOARD_ORIGINS" Default="" Mode="" Description="Optional comma-separated extra browser origins, e.g. https://llm.example.com, when the dashboard is served from a different host name than the API." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="FREEAPI_CONFIG_PATH" Target="FREEAPI_CONFIG_PATH" Default="" Mode="" Description="Optional path (inside the container) to a JSON startup config, e.g. /app/server/data/freellmapi.config.json. Applied idempotently on every start: admin account, provider keys, custom providers, routing. Carries plaintext secrets - protect the file." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="PROXY_RATE_LIMIT_RPM" Target="PROXY_RATE_LIMIT_RPM" Default="120" Mode="" Description="Max /v1 requests per minute per client IP. 0 disables the limit." Type="Variable" Display="advanced" Required="false" Mask="false">120</Config>
+  <Config Name="REQUEST_ANALYTICS_RETENTION_DAYS" Target="REQUEST_ANALYTICS_RETENTION_DAYS" Default="90" Mode="" Description="Days of request analytics to keep. 0 disables the time-based limit." Type="Variable" Display="advanced" Required="false" Mask="false">90</Config>
+  <Config Name="REQUEST_ANALYTICS_MAX_ROWS" Target="REQUEST_ANALYTICS_MAX_ROWS" Default="100000" Mode="" Description="Max request analytics rows to keep. 0 disables the row limit." Type="Variable" Display="advanced" Required="false" Mask="false">100000</Config>
+  <Config Name="FREEAPI_BLOCK_PRIVATE_PROVIDER_URLS" Target="FREEAPI_BLOCK_PRIVATE_PROVIDER_URLS" Default="" Mode="" Description="Optional. By default LAN and localhost addresses are ALLOWED as custom provider endpoints (Ollama, LM Studio, vLLM on your network work out of the box). Set to true to block private ranges if the dashboard is reachable by people you do not trust." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+  <Config Name="CATALOG_SYNC_DISABLED" Target="CATALOG_SYNC_DISABLED" Default="" Mode="" Description="Optional. Set to 1 to stop the signed model-catalog sync from freellmapi.co entirely (no new models, no quota updates). Leave empty to keep the catalog current." Type="Variable" Display="advanced" Required="false" Mask="false"></Config>
+</Container>

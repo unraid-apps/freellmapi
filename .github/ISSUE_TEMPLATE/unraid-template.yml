@@ -1,0 +1,46 @@
+name: Unraid template or wrapper image problem
+description: Something about the Community Applications template, the container start, the encryption key handling or the image mirror.
+labels: [unraid]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please only report problems with the **Unraid template or the wrapper image** here.
+        Bugs inside FreeLLMAPI itself (routing, providers, dashboard) go to the [upstream project](https://github.com/tashfeenahmed/freellmapi/issues).
+  - type: input
+    id: unraid
+    attributes:
+      label: Unraid version
+      placeholder: "7.1.4"
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Image tag
+      description: From the Docker tab, or `docker inspect FreeLLMAPI --format '{{.Config.Image}}'`
+      placeholder: "ghcr.io/unraid-apps/freellmapi:latest"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Container log
+      description: Docker tab, container icon, Logs. Remove API keys and the setup code before pasting. Lines starting with `unraid-entrypoint:` are the most useful.
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I removed secrets (provider keys, unified key, setup code, encryption key) from the log.
+          required: true
+        - label: The problem is about the template or the container start, not about FreeLLMAPI's features.
+          required: true

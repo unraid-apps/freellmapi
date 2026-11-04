@@ -1,0 +1,21 @@
+name: Validate templates
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate XML templates and ca_profile.xml
+        run: python3 scripts/validate-template.py --check-urls ca_profile.xml templates/*.xml
+      - name: Shell syntax
+        run: bash -n scripts/smoke-test.sh && sh -n entrypoint.sh
+      - name: Dockerfile builds (amd64, upstream latest)
+        run: docker build --build-arg UPSTREAM_TAG=latest -t wrapper-check .
