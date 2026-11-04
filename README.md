@@ -43,6 +43,10 @@ curl http://<unraid-ip>:3001/v1/chat/completions \
 
 Most coding agents configure themselves with one command, for example `npx freellmapi setup-claude --url http://<unraid-ip>:3001 --api-key <unified-key>`. See the [upstream client guide](https://github.com/tashfeenahmed/freellmapi/blob/main/docs/en/clients/02-supported-agents.md).
 
+## Connect your agents
+
+Ready-to-paste prompts for Claude Code, Codex CLI, Hermes Agent, OpenClaw, OpenCode, Goose, Aider, Cline, Continue, Qwen Code, Roo Code, Kilo Code, Crush, Pi, Reasonix, ZCode, DeepSeek Harness, MiMo Code, AtomCode and any OpenAI-compatible client live in [`docs/clients`](docs/clients/README.md). Each prompt makes the agent check its prerequisites, run the official FreeLLMAPI CLI as a dry run, compare the diff with what is documented, and only then write its configuration. The index explains which gateway address to use from a container on the same Docker network, from your LAN and from your tailnet.
+
 ## Template settings
 
 | Field | Default | Notes |
@@ -107,6 +111,8 @@ Two things matter: the data folder (`/mnt/user/appdata/freellmapi`, which includ
 
 ```
 templates/freellmapi.xml       Community Applications template
+docs/clients/                  copy-paste prompts to connect agents and apps (generated)
+tools/gen-client-docs.py       generator for docs/clients
 ca_profile.xml                 repository profile shown in CA
 Dockerfile, entrypoint.sh      wrapper image
 scripts/upstream-versions.py   decides which upstream tags to (re)build

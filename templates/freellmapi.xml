@@ -17,6 +17,8 @@ FIRST START: open the WebUI. Because you reach it from another device, FreeLLMAP
 &#xD;
 SECURITY: single-user application guarded only by its API key. Keep it on your LAN or behind Tailscale (fields are pre-filled, just enable "Use Tailscale"). Do not port-forward it to the internet.&#xD;
 &#xD;
+Copy-paste prompts that let your coding agents (Claude Code, Codex, Hermes Agent, Cline, Aider and more) configure themselves for this container: https://github.com/unraid-apps/freellmapi/tree/main/docs/clients&#xD;
+&#xD;
 Further tuning variables are documented in the upstream .env.example and can be added with "Add another Path, Port, Variable".</Overview>
   <Category>AI: Tools:Utilities Network:Web</Category>
   <WebUI>http://[IP]:[PORT:3001]/</WebUI>
