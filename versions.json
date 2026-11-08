@@ -1,5 +1,11 @@
 {
   "versions": {
+    "v0.16.22": {
+      "upstream_digest": "sha256:89adee5bc3fa8ef3a5b43f3c5ec06d24c4187ff38e5c9bfebb3a406c66cd2be5",
+      "wrapper_revision": "db24d300f031",
+      "image_digest": "sha256:9b2f6fae0d93da2f38cb2e61b626a10cc30e5b7e9fba603b1ff6ea37229c2ccd",
+      "built_at": "2026-11-08T13:20:13+00:00"
+    },
     "v0.16.21": {
       "upstream_digest": "sha256:1071404e07df829bd9c1a38326fc3889aa7927ca3371c97f1641ef575819155b",
       "wrapper_revision": "db24d300f031",
