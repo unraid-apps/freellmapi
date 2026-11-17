@@ -1,5 +1,17 @@
 {
   "versions": {
+    "v0.16.33": {
+      "upstream_digest": "sha256:667ba1f4bbc2bc2837ca5ae2f80e6fbdb3218d47b620d22f0b6f16c2c60770c6",
+      "wrapper_revision": "db24d300f031",
+      "image_digest": "sha256:c25a54d588497a32611674cfa4d0a81fdb39aea99dd5097fe97831b0c37d2500",
+      "built_at": "2026-11-17T20:53:05+00:00"
+    },
+    "v0.16.32": {
+      "upstream_digest": "sha256:c4320ba37329c3728e282f0f69b2a431b03300ae93eb466158f87e67c0687643",
+      "wrapper_revision": "db24d300f031",
+      "image_digest": "sha256:8a16264ed6a6cc3facd55aea55fbb8b02e4319005bcf6b74466fb154d2a2a311",
+      "built_at": "2026-11-17T20:52:35+00:00"
+    },
     "v0.16.31": {
       "upstream_digest": "sha256:1d6f948e78f11303d5e66d8ed6370211764dd27e8ae887622d1e9ddeab86e1e6",
       "wrapper_revision": "db24d300f031",
