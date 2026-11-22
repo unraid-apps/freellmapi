@@ -5,6 +5,7 @@ Maintained automatically by the sync workflow; the newest entry also carries the
 
 | Tag | Built (UTC) | Upstream release | Wrapper rev | Upstream digest |
 | --- | --- | --- | --- | --- |
+| `v0.16.38` | 2026-11-22T06:42:30+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.38) | `db24d300f031` | `sha256:66df25f2306f…` |
 | `v0.16.37` | 2026-11-20T20:11:06+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.37) | `db24d300f031` | `sha256:de0bdc3f40e5…` |
 | `v0.16.36` | 2026-11-19T20:32:08+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.36) | `db24d300f031` | `sha256:95a5eeba5690…` |
 | `v0.16.34` | 2026-11-18T07:23:44+00:00 | [notes](https://github.com/tashfeenahmed/freellmapi/releases/tag/v0.16.34) | `db24d300f031` | `sha256:3016d2128189…` |
